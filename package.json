@@ -1,0 +1,21 @@
+{
+  "name": "canvas-hit-effect",
+  "version": "0.0.0",
+  "description": "A hit effect made in HTML5 Canvas combined with React",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bryan Kroesbeek",
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "http-server": "^0.12.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  }
+}
