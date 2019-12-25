@@ -29,8 +29,9 @@ type EffectCircle = {
 }
 
 type EffectTriangle = {
-    angle: number
-    widthAtLength1: number
+    leftAngle: number
+    rightAngle: number
+    fadeDirection: number
 }
 
 const durationMillis = 750
@@ -51,6 +52,7 @@ export class EffectCanvas extends React.Component<{}, State> {
     }
 
     handleClick = (e: MouseEvent) => {
+
         let effect: Effect = {
             x: e.x,
             y: e.y,
@@ -62,6 +64,21 @@ export class EffectCanvas extends React.Component<{}, State> {
             effectTriangles: []
 
         }
+
+        for (let i = 0; i < (Math.random() + 3); i++) {
+            let widthAtLength1 = (Math.random() + 10) * (Math.PI / 180)
+            let angle = Math.random() * (Math.PI * 2 - widthAtLength1 * 2) + widthAtLength1
+
+            let range = (Math.PI / 180) * 5
+            let direction = Math.random() * range - (0.5 * range)
+
+            effect.effectTriangles.push({
+                leftAngle: angle - widthAtLength1,
+                rightAngle: angle + widthAtLength1,
+                fadeDirection: direction
+            })
+        }
+
         let effects = [...this.state.effects, effect]
 
         this.setState({ effects: effects })
@@ -69,6 +86,15 @@ export class EffectCanvas extends React.Component<{}, State> {
 
     update() {
         let effects = this.state.effects.map(e => {
+            e.effectTriangles = e.effectTriangles.map(et => {
+                et.leftAngle += .01
+                et.rightAngle -= .01
+                
+                et.leftAngle += et.fadeDirection
+                et.rightAngle += et.fadeDirection
+                return et
+            })
+
             e.circle.thickness -= .5
             e.circle.radius += 5
             return e
@@ -123,10 +149,18 @@ export class EffectCanvas extends React.Component<{}, State> {
 
     shouldRenderPixel(pixelX: number, pixelY: number, effect: Effect) {
         let circle = effect.circle
-        return (
+
+        let should = (
             ((pixelX - effect.x) ** 2 + (pixelY - effect.y) ** 2 < circle.radius ** 2) &&
             ((pixelX - effect.x) ** 2 + (pixelY - effect.y) ** 2 > (circle.radius - circle.thickness) ** 2)
         )
+
+        for (let i = 0; i < effect.effectTriangles.length; i++) {
+            let angle = Math.atan2((effect.y - pixelY), (effect.x - pixelX)) + Math.PI
+            should = should || angle > effect.effectTriangles[i].leftAngle && angle < effect.effectTriangles[i].rightAngle
+        }
+
+        return should
     }
 
     componentDidMount() {
