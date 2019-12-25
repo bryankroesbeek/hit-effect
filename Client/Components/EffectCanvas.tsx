@@ -53,7 +53,7 @@ export class EffectCanvas extends React.Component<{}, State> {
 
                 let isInside: boolean = false
                 for (let i = 0; i < length; i++) {
-                    isInside = isInside || ((poses[i].x - x) ** 2 + (poses[i].y - y) ** 2 < 50 ** 2)
+                    isInside = isInside || this.shouldRenderPixel(x, y, poses[i].x, poses[i].y)
                 }
                 if (isInside) {
                     this.pixelData.data[pixel + 0] = 0
@@ -78,6 +78,13 @@ export class EffectCanvas extends React.Component<{}, State> {
             poses.shift()
             this.setState({ positions: poses })
         }
+    }
+
+    shouldRenderPixel(pixelX: number, pixelY: number, screenX: number, screenY: number) {
+        return (
+            ((pixelX - screenX) ** 2 + (pixelY - screenY) ** 2 < 50 ** 2) &&
+            ((pixelX - screenX) ** 2 + (pixelY - screenY) ** 2 > 25 ** 2)
+        )
     }
 
     componentDidMount() {
