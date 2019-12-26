@@ -35,6 +35,7 @@ type EffectTriangle = {
 }
 
 const durationMillis = 750
+const frameRate = 1000 / 60
 
 export class EffectCanvas extends React.Component<{}, State> {
     canvas: HTMLCanvasElement
@@ -174,7 +175,7 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.canvas.height = doc.clientHeight
 
         addEventListener("mousedown", this.handleClick)
-        setInterval(() => this.loop(), 16)
+        setInterval(() => this.loop(), frameRate)
     }
 
     render() {
