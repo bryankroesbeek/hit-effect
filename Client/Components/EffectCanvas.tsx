@@ -26,9 +26,13 @@ type Effect = {
 type EffectCircle = {
     radius: number
     thickness: number
+    startRadius: number
+    startThickness: number
 }
 
 type EffectTriangle = {
+    widthAtLength1: number
+    angle: number
     leftAngle: number
     rightAngle: number
     fadeDirection: number
@@ -63,6 +67,8 @@ export class EffectCanvas extends React.Component<{}, State> {
             circle: {
                 radius: radius,
                 thickness: thickness,
+                startRadius: radius,
+                startThickness: thickness
             },
             effectTriangles: []
 
@@ -76,6 +82,8 @@ export class EffectCanvas extends React.Component<{}, State> {
             let direction = Math.random() * range - (0.5 * range)
 
             effect.effectTriangles.push({
+                widthAtLength1: widthAtLength1,
+                angle: angle,
                 leftAngle: angle - widthAtLength1,
                 rightAngle: angle + widthAtLength1,
                 fadeDirection: direction
@@ -89,17 +97,19 @@ export class EffectCanvas extends React.Component<{}, State> {
 
     update() {
         let effects = this.state.effects.map(e => {
+            let delta = Date.now() - e.instanceTime
+            let thickness = (durationMillis - delta) / durationMillis
+
             e.effectTriangles = e.effectTriangles.map(et => {
-                et.leftAngle += .01
-                et.rightAngle -= .01
-                
-                et.leftAngle += et.fadeDirection
-                et.rightAngle += et.fadeDirection
+                et.leftAngle = et.angle - et.widthAtLength1 * thickness
+                et.rightAngle = et.angle + et.widthAtLength1 * thickness
+
+                et.angle += et.fadeDirection
                 return et
             })
 
-            e.circle.thickness -= .5
-            e.circle.radius += 5
+            e.circle.thickness = e.circle.startThickness * thickness
+            e.circle.radius = e.circle.startRadius + e.circle.startRadius * (1 - thickness)
             return e
         })
 
