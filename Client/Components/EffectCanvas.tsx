@@ -141,10 +141,10 @@ export class EffectCanvas extends React.Component<{}, State> {
                     pixels[pixel + 2] = 0
                     pixels[pixel + 3] = 255
                 } else {
-                    pixels[pixel + 0] = 0
+                    pixels[pixel + 0] = 31
                     pixels[pixel + 1] = 0
-                    pixels[pixel + 2] = 0
-                    pixels[pixel + 3] = 0
+                    pixels[pixel + 2] = 63
+                    pixels[pixel + 3] = 255
 
                 }
             }
