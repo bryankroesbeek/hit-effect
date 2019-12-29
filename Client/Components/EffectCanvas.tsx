@@ -1,45 +1,15 @@
 import * as React from 'react'
 
+import { Effect, EffectCircle, EffectTriangle } from '../types'
+import { durationMillis, frameRate } from '../constants'
+
 type State = EffectCanvasState
 
 type EffectCanvasState = {
-    positions: Position[]
     context: CanvasRenderingContext2D
     diff: number
     effects: Effect[]
 }
-
-type Position = {
-    x: number
-    y: number
-    instanceStamp: number
-}
-
-type Effect = {
-    circle: EffectCircle
-    effectTriangles: EffectTriangle[]
-    instanceTime: number
-    x: number
-    y: number
-}
-
-type EffectCircle = {
-    radius: number
-    thickness: number
-    startRadius: number
-    startThickness: number
-}
-
-type EffectTriangle = {
-    widthAtLength1: number
-    angle: number
-    leftAngle: number
-    rightAngle: number
-    fadeDirection: number
-}
-
-const durationMillis = 750
-const frameRate = 1000 / 60
 
 export class EffectCanvas extends React.Component<{}, State> {
     canvas: HTMLCanvasElement
@@ -49,7 +19,6 @@ export class EffectCanvas extends React.Component<{}, State> {
         super(props)
 
         this.state = {
-            positions: [],
             context: null,
             diff: 0,
             effects: []
