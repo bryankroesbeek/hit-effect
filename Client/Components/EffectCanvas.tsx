@@ -41,6 +41,7 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.height = doc.clientHeight
 
         this.initializeWebGl(this.width, this.height)
+        requestAnimationFrame(this.loop)
     }
 
     initializeWebGl(width: number, height: number) {
@@ -118,8 +119,29 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.setState({ effects: effects })
     }
 
-    loop() {
+    renderScreen = () => {
+        this.canvas.width = this.width
+        this.canvas.height = this.height
+        this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height)
+        this.gl.clearColor(0, 0, 0, 0)
+        this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+
+        this.gl.useProgram(this.program)
+
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
+        this.gl.enableVertexAttribArray(this.positionAttributeLocation);
+        this.gl.vertexAttribPointer(this.positionAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
+
+        this.gl.uniform2f(this.resolutionLocation, this.width, this.height)
+        this.gl.uniform4f(this.baseColorLocation, 0.2, 0.0, 0.4, 1)
+
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6)
+    }
+
+    loop = () => {
         this.update()
+        this.renderScreen()
+        requestAnimationFrame(this.loop)
     }
 
     shouldRenderPixel(pixelX: number, pixelY: number, effect: Effect) {
