@@ -75,8 +75,11 @@ export class EffectCanvas extends React.Component<{}, State> {
     }
 
     handleClick = (e: MouseEvent) => {
+        let effects = this.state.effects
+        let id = this.state.effects.findIndex(e => e.end)
         let effect = generateEffect(e.x, e.y)
-        let effects = [...this.state.effects, effect]
+        if (id === -1) effects = [...effects, effect]
+        else effects[id] = effect
         this.setState({ effects: effects })
     }
 
@@ -85,6 +88,7 @@ export class EffectCanvas extends React.Component<{}, State> {
             let delta = Date.now() - e.instanceTime
             let thickness = (durationMillis - delta) / durationMillis
 
+            e.end = delta > durationMillis
             e.effectTriangles = e.effectTriangles.map(et => {
                 et.leftAngle = et.angle - et.widthAtLength1 * thickness
                 et.rightAngle = et.angle + et.widthAtLength1 * thickness

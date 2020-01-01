@@ -4,6 +4,7 @@ export type Effect = {
     instanceTime: number
     x: number
     y: number
+    end: boolean
 }
 
 export type EffectCircle = {

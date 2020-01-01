@@ -8,6 +8,7 @@ export function generateEffect(clickX: number, clickY: number): Effect {
         x: clickX,
         y: clickY,
         instanceTime: Date.now(),
+        end: false,
         circle: {
             radius: radius,
             thickness: thickness,
