@@ -1,8 +1,8 @@
 import { Effect } from '../types'
 
 export function generateEffect(clickX: number, clickY: number): Effect {
-    let radius = Math.random() * 50 + 25
-    let thickness = Math.random() * 25 + 10
+    let radius = Math.random() * 150 + 50
+    let thickness = Math.random() * 40 + 15
 
     let effect: Effect = {
         x: clickX,
