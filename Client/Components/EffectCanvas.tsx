@@ -18,6 +18,8 @@ export class EffectCanvas extends React.Component<{}, State> {
 
     positionBuffer: WebGLBuffer
     positionAttributeLocation: number
+    resolutionLocation: WebGLUniformLocation
+    baseColorLocation: WebGLUniformLocation
     width: number
     height: number
 
@@ -48,6 +50,13 @@ export class EffectCanvas extends React.Component<{}, State> {
 
         this.positionBuffer = this.gl.createBuffer()
         initializeVertices(this.gl, this.positionBuffer, width, height)
+        this.initializeScreen()
+    }
+
+    initializeScreen() {
+        this.resolutionLocation = this.gl.getUniformLocation(this.program, 'resolution')
+        this.positionAttributeLocation = this.gl.getAttribLocation(this.program, 'a_position')
+        this.baseColorLocation = this.gl.getUniformLocation(this.program, 'baseColor')
     }
 
     handleClick = (e: MouseEvent) => {
