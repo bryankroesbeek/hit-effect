@@ -24,3 +24,16 @@ export function createProgram(gl: WebGLRenderingContext, vertexS: WebGLShader, f
     console.error(gl.getProgramInfoLog(program))
     gl.deleteProgram(program)
 }
+
+export function initializeVertices(gl: WebGLRenderingContext, buffer: WebGLBuffer, width: number, height: number) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+    let positions = [
+        0.0, 0.0,
+        width, 0.0,
+        0.0, height,
+        width, 0.0,
+        0.0, height,
+        width, height
+    ]
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.DYNAMIC_DRAW)
+}

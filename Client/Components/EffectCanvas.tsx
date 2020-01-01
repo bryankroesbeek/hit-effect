@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Effect, EffectCircle, EffectTriangle } from '../types'
 import { durationMillis, frameRate } from '../constants'
 import { vertexSource, fragmentSource } from '../shaders'
-import { createProgram, createShader } from '../helpers'
+import { createProgram, createShader, initializeVertices } from '../helpers'
 
 type State = EffectCanvasState
 
@@ -16,6 +16,8 @@ export class EffectCanvas extends React.Component<{}, State> {
     gl: WebGLRenderingContext
     program: WebGLProgram
 
+    positionBuffer: WebGLBuffer
+    positionAttributeLocation: number
     width: number
     height: number
 
@@ -43,7 +45,11 @@ export class EffectCanvas extends React.Component<{}, State> {
         let vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexSource)
         let fragmentShader = createShader(this.gl, this.gl.FRAGMENT_SHADER, fragmentSource)
         this.program = createProgram(this.gl, vertexShader, fragmentShader)
+
+        this.positionBuffer = this.gl.createBuffer()
+        initializeVertices(this.gl, this.positionBuffer, width, height)
     }
+
     handleClick = (e: MouseEvent) => {
         let radius = Math.random() * 50 + 25
         let thickness = Math.random() * 25 + 10
