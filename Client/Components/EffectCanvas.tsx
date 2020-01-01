@@ -11,6 +11,7 @@ type EffectCanvasState = {
 
 export class EffectCanvas extends React.Component<{}, State> {
     canvas: HTMLCanvasElement
+    gl: WebGLRenderingContext
 
     constructor(props: {}) {
         super(props)
@@ -20,6 +21,11 @@ export class EffectCanvas extends React.Component<{}, State> {
         }
     }
 
+    componentDidMount() {
+        let gl = this.canvas.getContext("webgl")
+        if (!gl) throw "NO WEBGL"
+        this.gl = gl
+    }
     handleClick = (e: MouseEvent) => {
         let radius = Math.random() * 50 + 25
         let thickness = Math.random() * 25 + 10
@@ -35,7 +41,6 @@ export class EffectCanvas extends React.Component<{}, State> {
                 startThickness: thickness
             },
             effectTriangles: []
-
         }
 
         for (let i = 0; i < (Math.random() + 3); i++) {
@@ -98,11 +103,6 @@ export class EffectCanvas extends React.Component<{}, State> {
         }
 
         return should
-    }
-
-    componentDidMount() {
-        addEventListener("mousedown", this.handleClick)
-        setInterval(() => this.loop(), frameRate)
     }
 
     render() {
