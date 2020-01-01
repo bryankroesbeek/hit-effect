@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { Effect, EffectCircle, EffectTriangle } from '../types'
 import { durationMillis, frameRate } from '../constants'
+import { vertexSource, fragmentSource } from '../shaders'
+import { createProgram, createShader } from '../helpers'
 
 type State = EffectCanvasState
 
@@ -12,6 +14,10 @@ type EffectCanvasState = {
 export class EffectCanvas extends React.Component<{}, State> {
     canvas: HTMLCanvasElement
     gl: WebGLRenderingContext
+    program: WebGLProgram
+
+    width: number
+    height: number
 
     constructor(props: {}) {
         super(props)
@@ -25,6 +31,18 @@ export class EffectCanvas extends React.Component<{}, State> {
         let gl = this.canvas.getContext("webgl")
         if (!gl) throw "NO WEBGL"
         this.gl = gl
+
+        let doc = document.getElementById("canvas-container")
+        this.width = doc.clientWidth
+        this.height = doc.clientHeight
+
+        this.initializeWebGl(this.width, this.height)
+    }
+
+    initializeWebGl(width: number, height: number) {
+        let vertexShader = createShader(this.gl, this.gl.VERTEX_SHADER, vertexSource)
+        let fragmentShader = createShader(this.gl, this.gl.FRAGMENT_SHADER, fragmentSource)
+        this.program = createProgram(this.gl, vertexShader, fragmentShader)
     }
     handleClick = (e: MouseEvent) => {
         let radius = Math.random() * 50 + 25
