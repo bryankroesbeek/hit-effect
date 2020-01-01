@@ -3,7 +3,8 @@ import * as React from 'react'
 import { Effect, EffectCircle, EffectTriangle } from '../types'
 import { durationMillis, frameRate } from '../constants'
 import { vertexSource, fragmentSource } from '../shaders'
-import { createProgram, createShader, initializeVertices } from '../helpers'
+import { createProgram, createShader, initializeVertices } from '../helpers/shaderHelpers'
+import { generateEffect } from '../helpers/effectHelpers'
 
 type State = EffectCanvasState
 
@@ -41,6 +42,8 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.height = doc.clientHeight
 
         this.initializeWebGl(this.width, this.height)
+
+        addEventListener("mousedown", this.handleClick)
         requestAnimationFrame(this.loop)
     }
 
@@ -61,40 +64,8 @@ export class EffectCanvas extends React.Component<{}, State> {
     }
 
     handleClick = (e: MouseEvent) => {
-        let radius = Math.random() * 50 + 25
-        let thickness = Math.random() * 25 + 10
-
-        let effect: Effect = {
-            x: e.x,
-            y: e.y,
-            instanceTime: Date.now(),
-            circle: {
-                radius: radius,
-                thickness: thickness,
-                startRadius: radius,
-                startThickness: thickness
-            },
-            effectTriangles: []
-        }
-
-        for (let i = 0; i < (Math.random() + 3); i++) {
-            let widthAtLength1 = (Math.random() * 5 + 10) * (Math.PI / 180)
-            let angle = Math.random() * (Math.PI * 2 - widthAtLength1 * 2) + widthAtLength1
-
-            let range = (Math.PI / 180) * 5
-            let direction = Math.random() * range - (0.5 * range)
-
-            effect.effectTriangles.push({
-                widthAtLength1: widthAtLength1,
-                angle: angle,
-                leftAngle: angle - widthAtLength1,
-                rightAngle: angle + widthAtLength1,
-                fadeDirection: direction
-            })
-        }
-
+        let effect = generateEffect(e.x, e.y)
         let effects = [...this.state.effects, effect]
-
         this.setState({ effects: effects })
     }
 
