@@ -10,8 +10,8 @@ uniform vec4 activeColor;
 
 uniform vec4 effectCircles[MAX_SIZE];
 uniform vec4 effectTriangles[MAX_SIZE];
-uniform float effectCirclesSize;
-uniform float effectTrianglesSize;
+uniform int effectCirclesSize;
+uniform int effectTrianglesSize;
 
 void main() {
     gl_FragColor = baseColor;

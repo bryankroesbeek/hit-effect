@@ -119,8 +119,8 @@ export class EffectCanvas extends React.Component<{}, State> {
         let effectArrays = this.generateEffectArrays()
         this.gl.uniform4fv(this.effectCircles, effectArrays.effectCircles)
         this.gl.uniform4fv(this.effectTriangles, effectArrays.effectTriangles)
-        this.gl.uniform1f(this.effectCirclesSize, effectArrays.effectCircles.length)
-        this.gl.uniform1f(this.effectTrianglesSize, effectArrays.effectTriangles.length)
+        this.gl.uniform1i(this.effectCirclesSize, effectArrays.effectCircles.length)
+        this.gl.uniform1i(this.effectTrianglesSize, effectArrays.effectTriangles.length)
 
         this.gl.uniform4f(this.baseColorLocation, 0.2, 0.0, 0.4, 1)
         this.gl.uniform4f(this.activeColorLocation, 0, 1, 0, 1)
