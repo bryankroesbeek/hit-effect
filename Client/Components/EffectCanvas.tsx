@@ -16,13 +16,18 @@ export class EffectCanvas extends React.Component<{}, State> {
     canvas: HTMLCanvasElement
     gl: WebGLRenderingContext
     program: WebGLProgram
+    width: number
+    height: number
 
     positionBuffer: WebGLBuffer
     positionAttributeLocation: number
     resolutionLocation: WebGLUniformLocation
     baseColorLocation: WebGLUniformLocation
-    width: number
-    height: number
+    activeColorLocation: WebGLUniformLocation
+    effectCircles: WebGLUniformLocation
+    effectTriangles: WebGLUniformLocation
+    effectCirclesSize: WebGLUniformLocation
+    effectTrianglesSize: WebGLUniformLocation
 
     constructor(props: {}) {
         super(props)
@@ -61,6 +66,12 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.resolutionLocation = this.gl.getUniformLocation(this.program, 'resolution')
         this.positionAttributeLocation = this.gl.getAttribLocation(this.program, 'a_position')
         this.baseColorLocation = this.gl.getUniformLocation(this.program, 'baseColor')
+        this.activeColorLocation = this.gl.getUniformLocation(this.program, 'activeColor')
+
+        this.effectCircles = this.gl.getUniformLocation(this.program, 'effectCircles')
+        this.effectTriangles = this.gl.getUniformLocation(this.program, 'effectTriangles')
+        this.effectCirclesSize = this.gl.getUniformLocation(this.program, 'effectCirclesSize')
+        this.effectTrianglesSize = this.gl.getUniformLocation(this.program, 'effectTrianglesSize')
     }
 
     handleClick = (e: MouseEvent) => {
@@ -104,9 +115,36 @@ export class EffectCanvas extends React.Component<{}, State> {
         this.gl.vertexAttribPointer(this.positionAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
 
         this.gl.uniform2f(this.resolutionLocation, this.width, this.height)
+
+        let effectArrays = this.generateEffectArrays()
+        this.gl.uniform4fv(this.effectCircles, effectArrays.effectCircles)
+        this.gl.uniform4fv(this.effectTriangles, effectArrays.effectTriangles)
+        this.gl.uniform1f(this.effectCirclesSize, effectArrays.effectCircles.length)
+        this.gl.uniform1f(this.effectTrianglesSize, effectArrays.effectTriangles.length)
+
         this.gl.uniform4f(this.baseColorLocation, 0.2, 0.0, 0.4, 1)
+        this.gl.uniform4f(this.activeColorLocation, 0, 1, 0, 1)
 
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6)
+    }
+
+    generateEffectArrays() {
+        let effectCircles = []
+        let effectTriangles = []
+
+        for (let i = 0; i < this.state.effects.length; i++) {
+            let effect = this.state.effects[i]
+            let circle = effect.circle
+            let triangles = effect.effectTriangles
+            effectCircles.push(effect.x, effect.y, circle.radius, circle.thickness)
+
+            for (let j = 0; j < triangles.length; i++) {
+                let triangle = triangles[j]
+                effectTriangles.push(effect.x, effect.y, triangle.leftAngle, triangle.rightAngle)
+            }
+        }
+
+        return { effectCircles, effectTriangles }
     }
 
     loop = () => {
