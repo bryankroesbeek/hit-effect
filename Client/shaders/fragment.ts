@@ -1,5 +1,5 @@
 export const fragmentSource = `
-#define MAX_SIZE 256
+#define MAX_SIZE 64
 #define PI 3.1415926
 
 precision mediump float;
@@ -19,8 +19,10 @@ void main() {
     // Effect circles
     for (int i = 0; i < MAX_SIZE; i++) {
         if (i >= effectCirclesSize) break;
-        bool isInRadius = pow(effectCircles[i].x - v_Pixelposition.x, 2.0) + pow(effectCircles[i].y - v_Pixelposition.y, 2.0) < pow(effectCircles[i].z, 2.0);
-        bool isInInner = pow(effectCircles[i].x - v_Pixelposition.x, 2.0) + pow(effectCircles[i].y - v_Pixelposition.y, 2.0) > pow(effectCircles[i].z - effectCircles[i].w, 2.0);
+        float xDis = pow(effectCircles[i].x - v_Pixelposition.x, 2.0);
+        float yDis = pow(effectCircles[i].y - v_Pixelposition.y, 2.0);
+        bool isInRadius = xDis + yDis < pow(effectCircles[i].z, 2.0);
+        bool isInInner = xDis + yDis > pow(effectCircles[i].z - effectCircles[i].w, 2.0);
 
         if (isInRadius && isInInner) {
             gl_FragColor = activeColor;
