@@ -138,7 +138,7 @@ export class EffectCanvas extends React.Component<{}, State> {
             let triangles = effect.effectTriangles
             effectCircles.push(effect.x, effect.y, circle.radius, circle.thickness)
 
-            for (let j = 0; j < triangles.length; i++) {
+            for (let j = 0; j < triangles.length; j++) {
                 let triangle = triangles[j]
                 effectTriangles.push(effect.x, effect.y, triangle.leftAngle, triangle.rightAngle)
             }
